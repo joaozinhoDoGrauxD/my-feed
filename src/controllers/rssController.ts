@@ -8,10 +8,9 @@ import * as rssParser from 'react-native-rss-parser';
         const responseData = await response.text();
         const rss = await rssParser.parse(responseData);
         const items = rss.items;
-         for (const item of items) {
-            console.log(item)
-         }      
-         res.status(201).json({message: "Fetch feito com sucesso :)"})
+        console.log(`Total de items ${items.length}`) 
+        console.log(items[0]) 
+         res.status(200).json({items: items, message : "Sucesso ao dar fetch "})
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: "Erro ao buscar o feed" })
