@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "dependencies": {
     "@expo/ui": "~56.0.14",
-    "@react-native-picker/picker": "^2.11.4",
+    "@types/eslint": "^9.6.1",
     "axios": "^1.16.1",
     "cors": "^2.8.6",
+    "eslint": "^9.0.0",
     "expo": "~56.0.6",
     "expo-constants": "~56.0.16",
     "expo-device": "~56.0.4",
@@ -39,6 +40,8 @@
     "@types/express": "^5.0.6",
     "@types/react": "~19.2.2",
     "@types/react-native-rss-parser": "^1.4.3",
+    "eslint-config-expo": "~56.0.4",
+    "eslint-plugin-react": "^7.37.5",
     "typescript": "~6.0.3"
   },
   "scripts": {
