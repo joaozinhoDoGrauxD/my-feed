@@ -66,7 +66,7 @@ const Result: React.FC<ResultProps> = ({ data }) => {
                             {item.content !== undefined && hasHTML(item.content) && (
                                 <View style={styles.contentDivider}>
                                     <RenderHtml 
-                                        contentWidth={width - 60} 
+                                        contentWidth={width - 90} 
                                         source={{ html: item.content }} 
                                         baseStyle={htmlBaseStyle} 
                                     />

@@ -1,18 +1,36 @@
 
-import * as rssParser from 'react-native-rss-parser';
+import axios from 'axios'
+import iconv from 'iconv-lite'
 
  export const fetchFeed = async (req: any, res: any) => {
     const { url } = req.body;
     try { 
-        const response = await fetch(url);
-        const responseData = await response.text();
-        const rss = await rssParser.parse(responseData);
-        const items = rss.items;
-        const filteredItems = items.map(({title, description, content, authors, published }) => ({title, description, content, authors, published }))
-        res.status(200).json({items: filteredItems, message : "Sucesso ao dar fetch "})
+        const response = await axios.get(url, {
+            responseType: 'arraybuffer'
+        });
+
+        const contentType = String(response.headers['content-type'] || '');
+        const match = contentType.match(/charset=([^;]+)/i);
+        let charset = match ? match[1].toLowerCase().trim() : 'utf-8';
+
+        if (!match) {
+            const head = response.data.slice(0, 200).toString('utf-8');
+            const xmlMatch = head.match(/encoding=["'](.*?)["']/i);
+            if (xmlMatch) {
+                charset = xmlMatch[1].toLowerCase().trim();
+            }
+        }
+
+        if (!iconv.encodingExists(charset)) {
+            charset = 'utf-8';
+        }
+
+        const responseData = iconv.decode(response.data, charset);
+        res.set('Content-Type', 'text/xml; charset=utf-8');
+        return res.send(responseData)
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Erro ao buscar o feed" })
+        return res.status(500).json({ message: "Erro ao buscar o feed" })
     }
 
 };
