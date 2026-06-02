@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Input from "@/app/components/Input";
-import Header from "@/app/components/Header";
+import Input from "@/components/Input";
+import Header from "@/components/Header";
 
 export default function Index(): ReactNode {
   return (
     <SafeAreaProvider style={styles.safe}>
-      <Header/>
+      <Header />
       <Input />
     </SafeAreaProvider>
   );
@@ -16,6 +16,6 @@ export default function Index(): ReactNode {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#0f0f0f",
-  }
+    backgroundColor: "#09090b",
+  },
 });
