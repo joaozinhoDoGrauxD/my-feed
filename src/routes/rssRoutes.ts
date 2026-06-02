@@ -1,9 +1,9 @@
-import express from 'express'
+import express from "express";
 
-import { fetchFeed } from '@/controllers/rssController'
+import { rssController } from "@/controllers/rssController";
 
 const router = express.Router();
 
-router.post('/rss', fetchFeed);
+router.post("/rss", rssController);
 
-export default router
+export default router;
