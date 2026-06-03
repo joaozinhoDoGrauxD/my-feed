@@ -5,7 +5,7 @@ import { ResultCardImageProps } from "@/types/result.types";
 const ResultCardImage: React.FC<ResultCardImageProps> = ({ uri }) => {
   return (
     <View style={styles.containerImage}>
-      <Image style={styles.remoteImage} source={{ uri }} resizeMode="contain" />
+      <Image style={styles.remoteImage} source={{ uri }} resizeMode="cover" />
     </View>
   );
 };
