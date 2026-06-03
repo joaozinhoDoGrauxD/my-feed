@@ -39,8 +39,7 @@ export const fetchItems = async (
         authors: authors?.filter((a): a is { name: string } => !!a),
         published,
         enclosures,
-        itunes,
-        feed: rss.title,
+        itunes
       }),
     );
     func(filteredItems);
