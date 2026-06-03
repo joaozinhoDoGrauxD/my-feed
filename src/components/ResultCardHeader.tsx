@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { ResultCardHeaderProps } from "@/types/result.types";
+import { formatPublishedDate } from "../services/formatDateService";
 
 const ResultCardHeader: React.FC<ResultCardHeaderProps> = ({
   title,
@@ -8,7 +9,7 @@ const ResultCardHeader: React.FC<ResultCardHeaderProps> = ({
   publishedDate,
   onPress,
 }) => {
-  const formattedDate = publishedDate ? publishedDate.split("T")[0] : "";
+  const formattedDate = formatPublishedDate(publishedDate);
 
   return (
     <TouchableOpacity

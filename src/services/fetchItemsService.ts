@@ -9,9 +9,9 @@ const localIp = debuggerHost?.split(":")[0];
 const API_HOST =
   localIp || (Platform.OS === "android" ? "10.0.2.2" : "localhost");
 
-const TUNNEL_HOST = process.env.TUNNEL;
+const TUNNEL_HOST = process.env.EXPO_PUBLIC_TUNNEL;
 const LOCAL_HOST = `http://${API_HOST}:3000/api/rss`;
-const HOST = process.env.CODESPACES || process.env.BUN_ENV === 'production' ? TUNNEL_HOST : LOCAL_HOST;
+const HOST = process.env.CODESPACES || process.env.EXPO_PUBLIC_BUN_ENV === 'production' ? TUNNEL_HOST : LOCAL_HOST;
 
 export const fetchItems = async (
   myurl: string,

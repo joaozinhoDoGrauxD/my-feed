@@ -5,10 +5,7 @@ import ResultCardHeader from "./ResultCardHeader";
 import ResultCardImage from "./ResultCardImage";
 import ResultCardHtml from "./ResultCardHtml";
 import { ResultCardProps } from "@/types/result.types";
-
-const hasHTML = (str: string) => /<\/?[a-z][\s\S]*>/i.test(str);
-const hasAudio = (str: string) => /\.(mp3|wav|flac|aac|ogg|m4a)$/i.test(str);
-const hasImage = (str: string) => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(str);
+import { hasHTML, hasAudio, hasImage } from "../services/contentCheckService";
 
 const ResultCard: React.FC<ResultCardProps> = ({
   item,
