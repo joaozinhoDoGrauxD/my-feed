@@ -17,8 +17,10 @@ export const usePlayerService = (url: string) => {
     if (!seconds || isNaN(seconds)) return "0:00";
     const totalSeconds = Math.floor(seconds);
     const minutes = Math.floor(totalSeconds / 60);
+    const hours = Math.floor(minutes/ 60)
+    const remainingMinutes = minutes % 60;
     const remainingSeconds = totalSeconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    return `${hours}:${remainingMinutes < 10 ? "0" : ""}${remainingMinutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   return {
