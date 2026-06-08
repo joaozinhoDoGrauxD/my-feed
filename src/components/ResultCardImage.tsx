@@ -16,7 +16,7 @@ const ResultCardImage: React.FC<ResultCardImageProps> = ({ uri }) => {
 
 const styles = StyleSheet.create({
   containerImage: { marginBottom: 16, width: "100%", alignItems: "center" },
-  remoteImage: {width: "50%", height: 450, borderRadius: 12 },
+  remoteImage: {width: "100%", height: 300, borderRadius: 12 },
 });
 
 export default ResultCardImage;
