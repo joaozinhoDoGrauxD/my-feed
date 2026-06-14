@@ -8,7 +8,8 @@
     "scheme": "myfeed",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/images/icon.png"
+      "icon": "./assets/images/icon.png",
+      "bundleIdentifier": "com.app.feed.my"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +18,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.app.feed.my"
     },
     "web": {
       "output": "static",
@@ -36,11 +38,21 @@
         }
       ],
       "expo-build-properties",
-      "expo-image"
+      "expo-image",
+      "expo-audio",
+      "expo-font",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ffa66519-df34-475c-8ff8-af77a118b5ad"
+      }
+    },
+    "owner": "louia0113"
   }
 }
