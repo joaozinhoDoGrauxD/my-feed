@@ -1,11 +1,11 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import AudioPlayer from "./AudioPlayer";
-import ResultCardHeader from "./ResultCardHeader";
-import ResultCardImage from "./ResultCardImage";
-import ResultCardHtml from "./ResultCardHtml";
+import ResultCardHeader from "@/components/ResultCardHeader";
+import ResultCardImage from "@/components/ResultCardImage";
+import ResultCardHtml from "@/components/ResultCardHtml";
 import { ResultCardProps } from "@/types/result.types";
-import { hasHTML, hasAudio, hasImage } from "../services/contentCheckService";
+import { checkAllContent } from "@/services/contentCheckService";
 
 const ResultCard: React.FC<ResultCardProps> = ({
   item,
@@ -13,6 +13,53 @@ const ResultCard: React.FC<ResultCardProps> = ({
   onPress,
   width,
 }) => {
+  const [mediaType, setMediaType] = useState<string | null>(null);
+  const [itunesImageType, setItunesImageType] = useState<string | null>(null);
+  const [descriptionType, setDescriptionType] = useState<string | null>(null);
+  const [contentType, setContentType] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const descriptionText = item.description || item.content || "";
+
+  useEffect(() => {
+    if (!isExpanded) {
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadContentAndMedia = async () => {
+      setIsLoading(true);
+      try {
+        const result = await checkAllContent(
+          item.enclosures?.[0]?.url,
+          item.itunes?.image,
+          descriptionText,
+          item.content,
+        );
+
+        if (isMounted) {
+          setMediaType(result.mediaType);
+          setItunesImageType(result.itunesImageType);
+          setDescriptionType(result.descriptionType);
+          setContentType(result.contentType);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar os conteúdos da mídia:", error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadContentAndMedia();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isExpanded, item, descriptionText]);
+
   return (
     <View style={styles.card}>
       <ResultCardHeader
@@ -24,36 +71,56 @@ const ResultCard: React.FC<ResultCardProps> = ({
 
       {isExpanded && (
         <View style={styles.descriptionBox}>
-          {item.enclosures?.[0]?.url !== undefined &&
-            hasImage(item.enclosures?.[0]?.url) && (
-              <ResultCardImage uri={item.enclosures[0].url} />
-            )}
-
-          {item.itunes?.image !== undefined && hasImage(item.itunes?.image) && (
-            <ResultCardImage uri={item.itunes.image} />
-          )}
-
-          {hasHTML(item.description) ? (
-            <ResultCardHtml
-              htmlContent={item.description}
-              contentWidth={width - 60}
-            />
+          {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color="#fafafa" />
+            </View>
           ) : (
-            <Text style={styles.description}>{item.description}</Text>
-          )}
+            <>
+              {!!item.enclosures?.[0]?.url &&
+                mediaType === "It's a image file" && (
+                  <ResultCardImage uri={item.enclosures[0].url} />
+                )}
 
-          {item.content !== undefined && hasHTML(item.content) && (
-            <ResultCardHtml
-              htmlContent={item.content}
-              contentWidth={width - 90}
-              isDivider
-            />
-          )}
+              {!!item.itunes?.image &&
+                itunesImageType === "It's a image file" && (
+                  <ResultCardImage uri={item.itunes.image} />
+                )}
+load
+              {descriptionType === "It's a HTML file" ||
+              (descriptionType === null &&
+                /<\/?[a-z][\s\S]*>/i.test(descriptionText)) ? (
+                <ResultCardHtml
+                  htmlContent={descriptionText}
+                  contentWidth={width - 60}
+                />
+              ) : (
+                !!descriptionText && (
+                  <Text style={styles.description}>{descriptionText}</Text>
+                )
+              )}
 
-          {item.enclosures?.[0]?.url !== undefined &&
-            hasAudio(item.enclosures?.[0]?.url) && (
-              <AudioPlayer url={item.enclosures[0].url} title={item.title} />
-            )}
+              {!!item.description &&
+                !!item.content &&
+                (contentType === "It's a HTML file" ||
+                  (contentType === null &&
+                    /<\/?[a-z][\s\S]*>/i.test(item.content))) && (
+                  <ResultCardHtml
+                    htmlContent={item.content}
+                    contentWidth={width - 90}
+                    isDivider
+                  />
+                )}
+
+              {!!item.enclosures?.[0]?.url &&
+                mediaType === "It's a audio file" && (
+                  <AudioPlayer
+                    url={item.enclosures[0].url}
+                    title={item.title}
+                  />
+                )}
+            </>
+          )}
         </View>
       )}
     </View>
@@ -78,6 +145,11 @@ const styles = StyleSheet.create({
     borderTopColor: "#27272a",
   },
   description: { fontSize: 15, color: "#d4d4d8", lineHeight: 24 },
+  loadingContainer: {
+    paddingVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default ResultCard;

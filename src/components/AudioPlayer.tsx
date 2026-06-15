@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { usePlayerService } from "@/hooks/usePlayer";
+import { usePlayer } from "@/hooks/usePlayer";
 import { AudioPlayerProps } from "@/types/audioPlayer.types";
 
 const AudioPlayer = ({ url, title }: AudioPlayerProps) => {
@@ -12,7 +12,7 @@ const AudioPlayer = ({ url, title }: AudioPlayerProps) => {
     isPlaying,
     position,
     duration,
-  } = usePlayerService(url);
+  } = usePlayer(url);
   return (
     <View style={playerStyles.container}>
       <Text style={playerStyles.title}>Ouvindo: {title}</Text>

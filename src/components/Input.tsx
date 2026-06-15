@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   Text,
 } from "react-native";
-import Result from "./Result";
-import { fetchItems } from "@/services/fetchItemsService";
+import Result from "@/components/Result";
 import { Article } from "@/types/article.types";
-
+import { api } from "@/services/api";
 const Input = (): ReactNode => {
   const [url, setUrl] = useState("");
   const [items, setItems] = useState<Article[]>([]);
@@ -30,7 +29,16 @@ const Input = (): ReactNode => {
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
-            onPress={async () => await fetchItems(url, setItems)}
+            onPress={async () => {
+              try {
+                const response = await api.post<Article[]>("/api/rss/items", {
+                  url,
+                });
+                setItems(response.data);
+              } catch (error) {
+                console.error("Erro ao buscar feed:", error);
+              }
+            }}
           >
             <Text style={styles.buttonText}>Buscar feed</Text>
           </TouchableOpacity>
