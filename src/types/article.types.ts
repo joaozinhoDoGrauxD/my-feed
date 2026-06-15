@@ -6,5 +6,5 @@ export interface Article {
   authors?: { name: string }[];
   published?: string;
   enclosures?: { url: string }[];
-  itunes?: { image: string | undefined }; 
+  itunes?: { image: string | undefined };
 }
