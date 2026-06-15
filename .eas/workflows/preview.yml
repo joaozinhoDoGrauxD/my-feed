@@ -3,9 +3,9 @@ name: Build de um app
 on:
   push:
     tags:
-      - 'v*'
-    
-jobs: 
+      - "v*"
+
+jobs:
   build_android:
     name: Buildar app para android
     type: build
