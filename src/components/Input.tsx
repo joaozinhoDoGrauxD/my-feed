@@ -5,13 +5,17 @@ import {
   View,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import Result from "@/components/Result";
 import { Article } from "@/types/article.types";
 import { api } from "@/services/api";
+import { checkAllContent } from "@/services/contentCheckService";
 const Input = (): ReactNode => {
   const [url, setUrl] = useState("");
   const [items, setItems] = useState<Article[]>([]);
+  const [checkedTypes, setCheckedTypes] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
@@ -25,25 +29,36 @@ const Input = (): ReactNode => {
             defaultValue={url}
             autoCapitalize="none"
             autoCorrect={false}
+            editable={!isLoading}
           />
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
+            disabled={isLoading}
             onPress={async () => {
+              setIsLoading(true);
               try {
                 const response = await api.post<Article[]>("/api/rss/items", {
                   url,
                 });
                 setItems(response.data);
+                const types = await checkAllContent(url);
+                setCheckedTypes(types);
               } catch (error) {
                 console.error("Erro ao buscar feed:", error);
+              } finally {
+                setIsLoading(false);
               }
             }}
           >
-            <Text style={styles.buttonText}>Buscar feed</Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#ffffff" />
+            ) : (
+              <Text style={styles.buttonText}>Buscar feed</Text>
+            )}
           </TouchableOpacity>
         </View>
-        <Result data={items} />
+        <Result data={items} checkedTypes={checkedTypes} />
       </View>
     </>
   );

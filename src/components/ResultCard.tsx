@@ -5,60 +5,45 @@ import ResultCardHeader from "@/components/ResultCardHeader";
 import ResultCardImage from "@/components/ResultCardImage";
 import ResultCardHtml from "@/components/ResultCardHtml";
 import { ResultCardProps } from "@/types/result.types";
-import { checkAllContent } from "@/services/contentCheckService";
 
 const ResultCard: React.FC<ResultCardProps> = ({
   item,
   isExpanded,
   onPress,
   width,
+  checkedTypes,
 }) => {
-  const [mediaType, setMediaType] = useState<string | null>(null);
-  const [itunesImageType, setItunesImageType] = useState<string | null>(null);
-  const [descriptionType, setDescriptionType] = useState<string | null>(null);
-  const [contentType, setContentType] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [lastExpanded, setLastExpanded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  if (isExpanded !== lastExpanded) {
+    setLastExpanded(isExpanded);
+    if (isExpanded) {
+      setIsLoading(true);
+    }
+  }
 
   const descriptionText = item.description || item.content || "";
 
+  const mediaType = item.enclosures?.[0]?.url
+    ? checkedTypes[item.enclosures[0].url] || null
+    : null;
+  const itunesImageType = item.itunes?.image
+    ? checkedTypes[item.itunes.image] || null
+    : null;
+  const descriptionType = descriptionText
+    ? checkedTypes[descriptionText] || null
+    : null;
+  const contentType = item.content ? checkedTypes[item.content] || null : null;
+
   useEffect(() => {
-    if (!isExpanded) {
-      return;
+    if (isExpanded && isLoading) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+      return () => clearTimeout(timer);
     }
-
-    let isMounted = true;
-
-    const loadContentAndMedia = async () => {
-      setIsLoading(true);
-      try {
-        const result = await checkAllContent(
-          item.enclosures?.[0]?.url,
-          item.itunes?.image,
-          descriptionText,
-          item.content,
-        );
-
-        if (isMounted) {
-          setMediaType(result.mediaType);
-          setItunesImageType(result.itunesImageType);
-          setDescriptionType(result.descriptionType);
-          setContentType(result.contentType);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar os conteúdos da mídia:", error);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    loadContentAndMedia();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [isExpanded, item, descriptionText]);
+  }, [isExpanded, isLoading]);
 
   return (
     <View style={styles.card}>
@@ -86,7 +71,7 @@ const ResultCard: React.FC<ResultCardProps> = ({
                 itunesImageType === "It's a image file" && (
                   <ResultCardImage uri={item.itunes.image} />
                 )}
-load
+
               {descriptionType === "It's a HTML file" ||
               (descriptionType === null &&
                 /<\/?[a-z][\s\S]*>/i.test(descriptionText)) ? (

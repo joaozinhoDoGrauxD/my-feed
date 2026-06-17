@@ -1,7 +1,8 @@
-import { Article } from "./article.types";
+import { Article } from "@/types/article.types";
 
 export interface ResultProps {
   data: Article[];
+  checkedTypes: Record<string, string>;
 }
 
 export interface ResultCardProps {
@@ -9,6 +10,7 @@ export interface ResultCardProps {
   isExpanded: boolean;
   onPress: () => void;
   width: number;
+  checkedTypes: Record<string, string>;
 }
 
 export interface ResultCardHeaderProps {

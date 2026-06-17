@@ -20,7 +20,11 @@ export const usePlayer = (url: string) => {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     const remainingSeconds = totalSeconds % 60;
-    return `${hours}:${remainingMinutes < 10 ? "0" : ""}${remainingMinutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+
+    if (hours > 0) {
+      return `${hours}:${remainingMinutes < 10 ? "0" : ""}${remainingMinutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    }
+    return `${remainingMinutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   return {

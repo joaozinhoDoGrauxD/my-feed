@@ -3,7 +3,7 @@ import { StyleSheet, FlatList, useWindowDimensions } from "react-native";
 import { ResultProps } from "@/types/result.types";
 import ResultCard from "./ResultCard";
 
-const Result: React.FC<ResultProps> = ({ data }) => {
+const Result: React.FC<ResultProps> = ({ data, checkedTypes }) => {
   const [expanded, setExpanded] = useState<number | null>(null);
   const { width } = useWindowDimensions();
 
@@ -21,6 +21,7 @@ const Result: React.FC<ResultProps> = ({ data }) => {
           isExpanded={expanded === index}
           onPress={() => setExpanded(expanded === index ? null : index)}
           width={width}
+          checkedTypes={checkedTypes}
         />
       )}
     />
