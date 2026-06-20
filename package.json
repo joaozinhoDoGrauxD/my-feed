@@ -57,8 +57,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint",
-    "server": "bun run --watch src/server.ts"
+    "lint": "expo lint"
   },
   "private": true
 }
