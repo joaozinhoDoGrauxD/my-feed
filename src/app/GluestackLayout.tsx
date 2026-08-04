@@ -1,7 +1,7 @@
 import '@/global.css';
 import { GluestackUIProvider, ModeType } from '@/components/ui/gluestack-ui-provider';
 
-export default function RootLayout({
+export default function GluestackLayout({
   children, theme
 }: {
   children: React.ReactNode, theme?: ModeType 

@@ -1,4 +1,3 @@
 import { registerRootComponent } from "expo";
-import Index from "./Index";
-
-registerRootComponent(Index)
+import App from "./App";
+registerRootComponent(App)
