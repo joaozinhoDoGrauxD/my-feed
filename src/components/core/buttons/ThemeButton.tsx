@@ -1,16 +1,22 @@
-import { Button, ButtonIcon} from "@/components/ui/button";
-import { useState } from "react";
-import { LightbulbOffIcon, LightbulbIcon } from "lucide-react-native";
-import { ModeType } from "@/components/ui/gluestack-ui-provider";
+import { Button, ButtonIcon } from "@/gluestack/button";
+import { LightbulbOffIcon, LightbulbIcon, LucideIcon } from "lucide-react-native";
+import { Box } from "@/gluestack/box";
+import useTheme from "@/hooks/useTheme";
 
-export default function ThemeButton ({func} : {func: React.Dispatch<React.SetStateAction<ModeType>>}) {
-  const [isDark, setIsDark] = useState<boolean>(true);
+function MyIcon ({icon} : {icon : LucideIcon}) {
+  return <ButtonIcon  size="lg" as={icon} />
+}
+
+export default function ThemeButton() {
+const {isDark, setIsDark} = useTheme()
   return (
- <Button variant="outline" size="sm" onPress={() => {
-          setIsDark(!isDark)
-          isDark ? func('dark') : func('light')
-  }}>
-      {isDark ? (<LightbulbOffIcon size={18} color={"white"}/>) : (<LightbulbIcon size={18} color={"black"}/>)}
+    <Box className="m-auto mr-10">
+      <Button variant="outline" size="sm" onPress={() => setIsDark(!isDark)}>
+        { isDark ?
+        <MyIcon icon={LightbulbIcon}/>
+        : <MyIcon icon={LightbulbOffIcon}/> }
       </Button>
+    </Box>
   )
+
 }

@@ -1,11 +1,22 @@
-import { View } from "react-native"
-import NavigateButton from "../core/buttons/NavigateButton"
+import { Box } from "@/gluestack/box"
+import { Text } from "@/gluestack/text"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { Center } from "@/gluestack/center"
+
 export default function MobileIndex() {
     return (
-        <View className="flex-1 bg-cyan-300 content-center">
-            <View className="mt-60 bg-yellow-400 ">
-                <NavigateButton route="About" title="Teste" />
-            </View>
-        </View>
+        <Box className="flex-1 bg-red-500">
+            <SafeAreaView>
+                <Box className="bg-secondary">
+                    <Center>
+                        <Box className="bg-primary  p-20">
+                            <Center>
+                                <Text size="sm" bold className="text-primary-foreground">aaaaaaaaa</Text>
+                            </Center>
+                        </Box>
+                    </Center>
+                </Box>
+            </SafeAreaView>
+        </Box>
     )
 }

@@ -1,0 +1,54 @@
+import { ReactNode, useState } from "react";
+import { Box } from "@/gluestack/box";
+import { Button, ButtonSpinner, ButtonText } from "@/gluestack/button";
+import { Search } from "lucide-react-native";
+import { Input, InputField, InputSlot, InputIcon } from "@/gluestack/input";
+import Result from "../result/Result";
+import { Article } from "@/types/article.types";
+import { api } from "@/services/api";
+import { checkAllContent } from "@/services/contentCheckService";
+
+const MyInput = (): ReactNode => {
+  const [url, setUrl] = useState("");
+  const [items, setItems] = useState<Article[]>([]);
+  const [checkedTypes, setCheckedTypes] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  return (
+    <Box className="pt-6">
+      <Box className="px-6 mb-2">
+        <Input>
+          <InputField autoCapitalize="none" autoCorrect={false} editable={!isLoading} onChangeText={setUrl} defaultValue={url} placeholder="Cole a URL do Feed Rss..." />
+          <InputSlot>
+            <InputIcon as={Search} />
+          </InputSlot>
+        </Input>
+        <Button onPress={async () => {
+          setIsLoading(true);
+          try {
+            const response = await api.post<Article[]>("/api/rss/items", {
+              url,
+            });
+            setItems(response.data);
+            const types = await checkAllContent(url);
+            setCheckedTypes(types);
+          } catch (error) {
+            console.error("Erro ao buscar feed:", error);
+          } finally {
+            setIsLoading(false);
+          }
+        }
+        } variant="secondary" className="m-auto mt-5" disabled={isLoading}>
+          {isLoading ? (
+            <ButtonSpinner size="small" color="#ffffff" />
+          ) : (
+            <ButtonText className="text-primary-foreground">Buscar feed</ButtonText>
+          )}
+        </Button>
+      </Box>
+      <Result data={items} checkedTypes={checkedTypes} />
+    </Box>
+  );
+};
+
+export default MyInput;

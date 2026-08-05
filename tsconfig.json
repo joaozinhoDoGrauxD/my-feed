@@ -3,12 +3,14 @@
     "strict": true,
     "jsx": "react-native",
     "paths": {
-      "@/*": [
-        "./src/app/*","./src/*", "./*"
-      ],
-      "@/assets/*": [
-        "./assets/*"
-      ]
+      "@/*": ["./src/*", "./src/app/*", "./*"],
+      "@/components/*": ["./src/components/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/services/*": ["./src/services/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/screens/*": ["./src/screens/*"],
+      "@/assets/*": ["./assets/*"],
+      "@/gluestack/*": ["./src/components/ui/*"]
     }
   },
   "include": [
