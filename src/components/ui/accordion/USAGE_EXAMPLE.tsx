@@ -16,7 +16,7 @@ import {
   AccordionContent,
   AccordionContentText,
 } from './index';
-import { ChevronDownIcon } from 'lucide-react-native'; // or your icon library
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react-native'; // or your icon library
 
 // ============================================================================
 // BASIC USAGE - With Automatic Icon Rotation
@@ -72,7 +72,7 @@ export function BasicAccordionExample() {
 export function OldApproach() {
   return (
     <AccordionTrigger>
-      {({ isExpanded }) => (
+      {({ isExpanded } : {isExpanded: boolean}) => (
         <>
           <AccordionTitleText>Question?</AccordionTitleText>
           {/* Had to manually switch icons */}
@@ -105,7 +105,7 @@ export function NewApproach() {
 export function ManualControlExample() {
   return (
     <AccordionTrigger>
-      {({ isExpanded }) => (
+      {({ isExpanded } : {isExpanded: boolean}) => (
         <>
           <AccordionTitleText>
             {isExpanded ? 'Click to collapse' : 'Click to expand'}

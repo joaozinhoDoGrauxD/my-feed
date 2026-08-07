@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { View, Pressable, TextInput } from 'react-native';
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar } from '@/gluestack/calendar';
 import { PrimitiveIcon } from '@gluestack-ui/core/icon/creator';
 
 type DateTimePickerMode = 'date' | 'time' | 'datetime';
@@ -119,11 +119,8 @@ const DateTimePicker = React.forwardRef<
             <View className="mb-4">
               <Calendar
                 mode="single"
-                selected={tempDate}
-                onSelect={handleDateSelect}
-                initialDate={tempDate}
-                minDate={minimumDate}
-                maxDate={maximumDate}
+                value={tempDate}
+                onValueChange={handleDateSelect}
               />
             </View>
           )}

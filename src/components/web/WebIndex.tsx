@@ -1,6 +1,6 @@
-import { Box } from "@/gluestack/box";
+import Header from "@/components/web/header/HeaderWeb";
 import Input from "@/components/web/input/Input";
-import Header from "@/components/core/HeaderWeb";
+import { Box } from "@/gluestack/box";
 
 export default function WebIndex () {
     return (

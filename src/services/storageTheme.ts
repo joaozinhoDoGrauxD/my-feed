@@ -1,5 +1,5 @@
+import { ModeType } from "@/gluestack/gluestack-ui-provider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ModeType } from "@/components/ui/gluestack-ui-provider";
 
 export const getTheme = async () => {
     try {

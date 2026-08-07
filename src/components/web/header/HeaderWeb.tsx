@@ -1,8 +1,8 @@
+import { Box } from "@/gluestack/box";
+import { Heading } from "@/gluestack/heading";
+import { Text } from "@/gluestack/text";
 import { ReactNode } from "react";
-import { Box } from "../ui/box";
-import { Heading } from "../ui/heading";
-import ThemeButton from "./buttons/ThemeButton";
-import { Text } from "../ui/text";
+import ThemeButton from "../../core/buttons/ThemeButton";
 
 
 const Header = (): ReactNode => {
