@@ -9,7 +9,7 @@ const API_HOST =
 
 const TUNNEL_HOST = process.env.EXPO_PUBLIC_TUNNEL;
 const PRODUCTION_HOST = process.env.EXPO_PUBLIC_PRODUCTION;
-const LOCAL_HOST: string | undefined = `http://${API_HOST}:3000`;
+const LOCAL_HOST: string | undefined = `http://${API_HOST}:3000/api`;
 
 const myURL = (): string | undefined => {
   if (process.env.CODESPACES || process.env.EXPO_PUBLIC_BUN_ENV === "testing") {

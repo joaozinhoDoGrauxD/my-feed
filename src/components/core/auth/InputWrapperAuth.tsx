@@ -1,8 +1,8 @@
 import { Icon } from "@/gluestack/icon";
 import { Input, InputField } from "@/gluestack/input";
+import { Center } from "@/components/ui/center";
 import React from "react";
 import { Box } from "@/gluestack/box";
-import { Center } from "@/gluestack/center";
 
 interface InputWrapperAuthProps {
   icon: any;
@@ -24,10 +24,12 @@ export default function InputWrapperAuth({
   autoCapitalize = "none"
 }: InputWrapperAuthProps) {
   return (
-    <Box className="flex-row bg-primary rounded-2xl border border-zinc-200/40 px-3.5 mb-3.5 h-12">
+    <Box className="flex-row bg-secondary rounded-2xl border border-border/80 px-3.5 mb-3.5 h-12 items-center">
       <Center>
-        <Icon as={icon} size="md" className="mr-2.5" />
-        <Input className="flex-1 border-0 h-full bg-transparent">
+        <Icon as={icon} size="md" className="text-secondary-foreground/60" />
+      </Center>
+      <Box className="flex-1 ml-2">
+        <Input className="border-0 h-full bg-transparent w-full">
           <InputField
             placeholder={placeholder}
             placeholderTextColor="#8E8E93"
@@ -36,11 +38,10 @@ export default function InputWrapperAuth({
             onChangeText={onChangeText}
             keyboardType={keyboardType}
             autoCapitalize={autoCapitalize}
-            className="text-zinc-900 text-sm font-medium h-full"
+            className="text-secondary-foreground text-sm font-medium h-full w-full"
           />
         </Input>
-      </Center>
-
+      </Box>
     </Box>
   );
 }

@@ -3,6 +3,7 @@ import AuthContext from "./ctxAuth";
 import { AuthContextType } from "@/types/authContext.types";
 import { signInFunction, signOutFunction } from "./authFunctions";
 import { saveSession, removeSession, getSession } from "./session";
+import { api } from "@/services/api";
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<string | null>(null);
@@ -14,6 +15,14 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (session) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${session}`;
+    } else {
+      delete api.defaults.headers.common["Authorization"];
+    }
+  }, [session]);
 
   async function signIn(email: string, password: string) {
     const token = await signInFunction(email, password);

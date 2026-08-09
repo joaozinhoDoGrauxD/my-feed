@@ -7,7 +7,7 @@ export const checkAllContent = async (
   try {
     const response = await api.post<{
       checkedTypes: Record<string, string>;
-    }>("/api/rss/check", {
+    }>("/rss/check", {
       url,
     });
     return response.data.checkedTypes || {};

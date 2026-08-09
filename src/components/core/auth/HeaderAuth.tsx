@@ -14,19 +14,21 @@ export default function HeaderAuth({ subtitle }: HeaderAuthProps) {
   return (
     <Box className="mb-6 z-10">
       <Center>
-        <Box className="w-16 h-16 rounded-full">
-          <Icon as={RssIcon} size="xl" />
-        </Box>
-        <Heading bold className="text-primary-foreground tracking-tight" size="2xl">
+        <Center className="w-16 h-16 rounded-2xl bg-primary mb-4 shadow-sm">
+          <Icon as={RssIcon} size="xl" className="text-primary-foreground" />
+        </Center>
+
+        <Heading bold className="text-foreground tracking-tight text-3xl mb-1">
           My-Feed
         </Heading>
-        <Center>
-        <Text size="sm" className="text-primary-foreground r mt-1 max-w-[280px] leading-relaxed">
-          {subtitle}
-        </Text>
-        </Center>
-        );
+        <Box className="bg-muted rounded-2xl mt-3 p-4">
+          <Center>
+            <Text size="sm" className="text-muted-foreground text-center max-w-[280px] leading-relaxed font-medium">
+              {subtitle}
+            </Text>
+          </Center>
+        </Box>
       </Center>
     </Box>
-  )
+  );
 }

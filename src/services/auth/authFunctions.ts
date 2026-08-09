@@ -12,7 +12,7 @@ export async function registerUser(email: string, password: string) {
  const resOk = res.status >= 200 && res.status< 300;
 
   if (!resOk) {
-    throw new Error("Credenciais inválidas");
+    throw new Error(res.data?.message || "Erro ao registrar usuário");
   }
 
   return res;
@@ -34,10 +34,16 @@ export async function signInFunction(email: string, password: string): Promise<s
   const data = await res.data;
   const token = data.access_token;
 
-  if (Platform.OS === "web") {
-    localStorage.setItem("session", token);
-  } else {
-    await SecureStore.setItemAsync("session", token);
+  if (token) {
+    try {
+      if (Platform.OS === "web") {
+        localStorage.setItem("session", String(token));
+      } else {
+        await SecureStore.setItemAsync("session", String(token));
+      }
+    } catch (e) {
+      console.warn("SecureStore setItem failed in signInFunction", e);
+    }
   }
 
   if (data.expiry_timestamp) {
@@ -54,10 +60,14 @@ export async function signInFunction(email: string, password: string): Promise<s
 }
 
 export async function signOutFunction(): Promise<void> {
-  if (Platform.OS === "web") {
-    localStorage.removeItem("session");
-  } else {
-    await SecureStore.deleteItemAsync("session");
+  try {
+    if (Platform.OS === "web") {
+      localStorage.removeItem("session");
+    } else {
+      await SecureStore.deleteItemAsync("session");
+    }
+  } catch (e) {
+    console.warn("SecureStore deleteItem failed in signOutFunction", e);
   }
   await removeSessionExpiry();
 }

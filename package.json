@@ -38,7 +38,7 @@
     "express": "^5.2.1",
     "hls.js": "^1.6.17",
     "iconv-lite": "^0.7.3",
-    "lucide-react-native": "^1.30.0",
+    "lucide-react-native": "^1.31.0",
     "nativewind": "^5.0.0-preview.4",
     "react": "19.1.0",
     "react-aria": "^3.51.0",
