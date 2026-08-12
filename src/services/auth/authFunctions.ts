@@ -5,7 +5,7 @@ import { removeSessionExpiry, saveSessionExpiry } from "./session";
 
 export async function registerUser(email: string, password: string) {
 
-  const res = await api.post("/auth/register", {email: email, password: password}, {
+  const res = await api.post("/auth/register", { email, password }, {
     validateStatus: () => true
   })
 
@@ -21,7 +21,7 @@ export async function registerUser(email: string, password: string) {
 export async function signInFunction(email: string, password: string): Promise<string> {
   if (!email || !password) throw new Error("Preencha todos os campos");
 
- const res = await api.post("/auth/login", {email: email, password: password }, {
+ const res = await api.post("/auth/login", { email, password }, {
   validateStatus: () => true
  })
 
@@ -31,19 +31,18 @@ export async function signInFunction(email: string, password: string): Promise<s
     throw new Error("Credenciais inválidas");
   }
 
-  const data = await res.data;
-  const token = data.access_token;
+  const data = res.data;
 
-  if (token) {
-    try {
-      if (Platform.OS === "web") {
-        localStorage.setItem("session", String(token));
-      } else {
-        await SecureStore.setItemAsync("session", String(token));
-      }
-    } catch (e) {
-      console.warn("SecureStore setItem failed in signInFunction", e);
-    }
+  // Aceita tanto 'token' quanto 'access_token'
+  const token = data.token || data.access_token;
+
+  if (!token) {
+    throw new Error("Token não retornado pelo servidor");
+  }
+  if (Platform.OS === "web") {
+    localStorage.setItem("session", String(token));
+  } else {
+    await SecureStore.setItemAsync("session", String(token));
   }
 
   if (data.expiry_timestamp) {
