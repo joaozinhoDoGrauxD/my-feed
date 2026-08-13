@@ -14,6 +14,8 @@ import Copyright from "@/components/core/auth/Copyright";
 import { authComponent } from "@/types/authComponent.types";
 import { Mail, Lock } from "lucide-react-native";
 import ThemeButton from "@/components/core/buttons/ThemeButton";
+import SafeAreaWrapper from "../SafeAreaWrapper";
+import { Platform } from "react-native";
 export default function AuthComponent({
   mode,
   icon,
@@ -37,10 +39,15 @@ export default function AuthComponent({
 
   const handleSubmit = mode === "login" ? handleLogin : handleRegister;
   return (
+    <SafeAreaWrapper>
     <Box className="flex-1 bg-background justify-center items-center px-5 py-5">
-      <Box className="absolute top-5 right-5 z-20">
+      {Platform.OS == 'web' && (
+      <Box className="mb-40 ml-190">
         <ThemeButton />
       </Box>
+      )}
+      <Box className="mb-30">
+        {Platform.OS !== 'web' && <ThemeButton/>}
       <Center>
         <HeaderAuth subtitle={subHeader} />
         <CardAuth title={titleCard} subtitle={subCard}>
@@ -91,6 +98,8 @@ export default function AuthComponent({
           <Copyright />
         </CardAuth>
       </Center>
+      </Box>
     </Box>
+    </SafeAreaWrapper>
   );
 }

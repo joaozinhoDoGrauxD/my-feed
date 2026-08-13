@@ -3,7 +3,6 @@ import { Heading } from "@/gluestack/heading";
 import { Text } from "@/gluestack/text";
 import { Box } from "@/gluestack/box";
 import { Center } from "@/gluestack/center";
-import { Dimensions } from "react-native";
 
 interface CardAuthProps {
   title: string;
@@ -11,14 +10,10 @@ interface CardAuthProps {
   children: React.ReactNode;
 }
 
-const windowWidth = Dimensions.get("window").width;
-const CARD_WIDTH = Math.min(windowWidth * 0.9, 390);
-
 export default function CardAuth({ title, subtitle, children }: CardAuthProps) {
   return (
     <Box
-      style={{ width: CARD_WIDTH }}
-      className="bg-card rounded-[32px] p-6.5 border border-border/60 shadow-md z-10"
+      className="w-full max-w-[390px] md:max-w-[420px] bg-card rounded-[32px] p-6.5 border border-border/60 shadow-md z-10"
     >
       <Center>
       <Heading bold className="text-foreground mb-1 text-xl" size="xl">
@@ -32,3 +27,4 @@ export default function CardAuth({ title, subtitle, children }: CardAuthProps) {
     </Box>
   );
 }
+
