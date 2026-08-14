@@ -70,3 +70,42 @@ export async function signOutFunction(): Promise<void> {
   }
   await removeSessionExpiry();
 }
+
+export async function signInWithGoogleFunction(idToken: string): Promise<string> {
+  const res = await api.post(
+    "/auth/google",
+    { idToken },
+    { validateStatus: () => true }
+  );
+
+  const resOk = res.status >= 200 && res.status < 300;
+
+  if (!resOk) {
+    throw new Error(res.data?.message || "Erro ao fazer login com o Google");
+  }
+
+  const data = res.data;
+  const token = data.token || data.access_token;
+
+  if (!token) {
+    throw new Error("Token não retornado pelo servidor");
+  }
+
+  if (Platform.OS === "web") {
+    localStorage.setItem("session", String(token));
+  } else {
+    await SecureStore.setItemAsync("session", String(token));
+  }
+
+  if (data.expiry_timestamp) {
+    let expiryNum = Number(data.expiry_timestamp);
+    if (expiryNum < 10000000000) {
+      expiryNum = expiryNum * 1000;
+    }
+    await saveSessionExpiry(expiryNum);
+  } else {
+    await removeSessionExpiry();
+  }
+
+  return token;
+}
