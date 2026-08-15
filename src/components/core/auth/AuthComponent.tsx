@@ -96,7 +96,7 @@ export default function AuthComponent({
 
               <Button
                 onPress={handleGoogleLogin}
-                disabled={!isGoogleReady || loading}
+                disabled={loading}
                 className="w-full bg-secondary border border-border rounded-2xl h-12 flex-row justify-center items-center shadow-sm mt-3 active:bg-secondary/80"
               >
                 <ButtonText className="text-secondary-foreground font-semibold text-sm">
