@@ -5,7 +5,20 @@ import { useSession } from "@/services/auth/session";
 import { Platform } from "react-native";
 import { registerUser } from "@/services/auth/authFunctions";
 
-export function useAuth() {
+export interface UseAuthReturn {
+  email: string;
+  password: string;
+  setEmail: (email: string) => void;
+  setPassword: (password: string) => void;
+  error: string | null;
+  loading: boolean;
+  handleLogin: () => Promise<void>;
+  handleRegister: () => Promise<void>;
+  handleGoogleLogin: () => void;
+  isGoogleReady: boolean;
+}
+
+export function useAuth(): UseAuthReturn {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -100,6 +113,5 @@ export function useAuth() {
     }
   };
 
-  return {setEmail, setPassword, handleRegister, handleLogin, email, password, error, loading}
-
-} 
+  return {email, password, setEmail, setPassword, error, loading, handleLogin, handleRegister, handleGoogleLogin, isGoogleReady: !!request,};
+}
