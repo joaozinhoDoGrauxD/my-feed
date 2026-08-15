@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AuthContext from "./ctxAuth";
 import { AuthContextType } from "@/types/authContext.types";
-import { signInFunction, signOutFunction } from "./authFunctions";
+import { signInFunction, signOutFunction, signInWithGoogleFunction } from "./authFunctions";
 import { saveSession, removeSession, getSession } from "./session";
 import { api } from "@/services/api";
 
@@ -30,13 +30,19 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     setSession(token);
   }
 
+  async function signInWithGoogle(idToken: string) {
+    const token = await signInWithGoogleFunction(idToken);
+    await saveSession(token);
+    setSession(token);
+  }
+
   async function signOut() {
     await signOutFunction();
     await removeSession();
     setSession(null);
   }
 
-  const value: AuthContextType = { signIn, signOut, session, isLoading };
+  const value: AuthContextType = { signIn, signInWithGoogle, signOut, session, isLoading };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
