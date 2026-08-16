@@ -13,8 +13,8 @@ const {isDark, setIsDark} = useTheme()
     <Box className="m-auto mr-10">
       <Button variant="outline" size="sm" onPress={() => setIsDark(!isDark)}>
         { isDark ?
-        <MyIcon icon={LightbulbIcon}/>
-        : <MyIcon icon={LightbulbOffIcon}/> }
+        <MyIcon icon={LightbulbOffIcon}/>
+        : <MyIcon icon={LightbulbIcon}/> }
       </Button>
     </Box>
   )
