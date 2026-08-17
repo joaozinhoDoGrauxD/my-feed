@@ -83,13 +83,34 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
+  const errorHandling = (error: any, msg: string): string => {
+    const genericMessage = error.message || msg;
+    const errors = error?.errors || error?.response?.data?.errors;
+
+    if (Array.isArray(errors)) {
+      const emailError = errors.find((err: any) => err?.field === "email");
+      const passwordError = errors.find((err: any) => err?.field === "password");
+
+      if (emailError && passwordError) {
+        return `${emailError.message} e ${passwordError.message}`;
+      } else if (emailError) {
+        return emailError.message;
+      } else if (passwordError) {
+        return passwordError.message;
+      }
+    }
+
+    return genericMessage;
+  };
+
   const handleLogin = async () => {
     setLoading(true);
     setError(null);
     try {
       await signIn(email, password);
     } catch (err: any) {
-      setError(err.message || "Erro ao realizar login");
+      const errorMessage: string = errorHandling(err, 'Erro ao realizar login')
+      setError(errorMessage)
     } finally {
       setLoading(false);
     }
@@ -107,11 +128,12 @@ export function useAuth(): UseAuthReturn {
       await registerUser(email, password);
       await signIn(email, password);
     } catch (err: any) {
-      setError(err.message || "Erro ao registrar usuário.");
+      const errorMessage: string = errorHandling(err, "Erro ao registrar usuário.")
+      setError(errorMessage)
     } finally {
       setLoading(false);
     }
   };
 
-  return {email, password, setEmail, setPassword, error, loading, handleLogin, handleRegister, handleGoogleLogin, isGoogleReady: !!request,};
+  return { email, password, setEmail, setPassword, error, loading, handleLogin, handleRegister, handleGoogleLogin, isGoogleReady: !!request, };
 }

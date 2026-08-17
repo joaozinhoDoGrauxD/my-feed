@@ -12,7 +12,9 @@ export async function registerUser(email: string, password: string) {
  const resOk = res.status >= 200 && res.status< 300;
 
   if (!resOk) {
-    throw new Error(res.data?.message || "Erro ao registrar usuário");
+    const error = new Error(res.data?.message || "Erro ao registrar usuário");
+    (error as any).errors = res.data?.errors;
+    throw error;
   }
 
   return res;
@@ -28,7 +30,9 @@ export async function signInFunction(email: string, password: string): Promise<s
  const resOk = res.status >= 200 && res.status< 300;
 
   if (!resOk) {
-    throw new Error("Credenciais inválidas");
+    const error = new Error("Credenciais inválidas");
+    (error as any).errors = res.data?.errors;
+    throw error;
   }
 
   const data = res.data;
