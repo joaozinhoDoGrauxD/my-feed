@@ -8,8 +8,10 @@ import { useSession } from "@/services/auth/session";
 import AboutPage from "@/screens/AboutPage"
 import IndexPage from "@/screens/IndexPage"
 import LoginPage from "@/screens/LoginPage";
+import PlayerPage from "@/screens/PlayerPage";
+import RssPage from "@/screens/RssPage";
 import RegisterPage from "@/screens/RegisterPage";
-import { Home, Info } from "lucide-react-native";
+import { Home, Info, Rss, PlayCircle} from "lucide-react-native";
 import useTheme from "@/hooks/useTheme";
 
 export default function Tabs() {
@@ -37,6 +39,10 @@ export default function Tabs() {
                     return <Home size={size} color={color} />
                 } else if (route.name === 'About') {
                     return <Info size={size} color={color} />
+                } else if (route.name == 'Rss') {
+                    return <Rss size={size} color={color}/>
+                } else if (route.name === 'Player') {
+                    return <PlayCircle size={size} color={color}/>
                 }
                 return null
             },
@@ -51,6 +57,8 @@ export default function Tabs() {
             tabBarInactiveTintColor: inactiveColor,
         })}>
             <Tab.Screen name="Home" component={IndexPage} options={{headerShown: false}} />
+            <Tab.Screen name="Rss" component={RssPage} options={{headerShown: false }}/>
+            <Tab.Screen name="Player" component={PlayerPage} options={{headerShown: false }}/>
             <Tab.Screen name="About" component={AboutPage} options={{headerShown: false }}/>
         </Tab.Navigator>
     ) : (
