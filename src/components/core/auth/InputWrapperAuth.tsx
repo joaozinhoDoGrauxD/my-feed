@@ -3,6 +3,7 @@ import { Input, InputField } from "@/gluestack/input";
 import { Center } from "@/components/ui/center";
 import React from "react";
 import { Box } from "@/gluestack/box";
+import { Select } from "@/gluestack/select";
 
 interface InputWrapperAuthProps {
   icon: any;

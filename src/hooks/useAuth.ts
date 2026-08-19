@@ -7,9 +7,11 @@ import { registerUser } from "@/services/auth/authFunctions";
 
 export interface UseAuthReturn {
   email: string;
+  username: string;
   password: string;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
+  setUsername : (usernname: string) => void;
   error: string | null;
   loading: boolean;
   handleLogin: () => Promise<void>;
@@ -19,14 +21,15 @@ export interface UseAuthReturn {
 }
 
 export function useAuth(): UseAuthReturn {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState<string>("")
+  const [role, setRole] = useState<"user" | "admin">("user")
 
   const { signIn, signInWithGoogle: contextSignInWithGoogle } = useSession();
 
-  // Gera o redirectUri dinâmico correto para Web e Mobile
   const redirectUri = makeRedirectUri({
     preferLocalhost: true,
   });
@@ -90,14 +93,30 @@ export function useAuth(): UseAuthReturn {
     if (Array.isArray(errors)) {
       const emailError = errors.find((err: any) => err?.field === "email");
       const passwordError = errors.find((err: any) => err?.field === "password");
+      const usernameError = errors.find((err: any) => err?.field === "username")
+      switch (true) {
+        case (emailError && passwordError && usernameError):
+        return `${emailError.message}, ${passwordError.message} e ${usernameError.message}`;
 
-      if (emailError && passwordError) {
-        return `${emailError.message} e ${passwordError.message}`;
-      } else if (emailError) {
-        return emailError.message;
-      } else if (passwordError) {
-        return passwordError.message;
+        case (emailError && passwordError):
+        return `${emailError.message} e ${passwordError.message}`
+
+        case (emailError && usernameError):
+        return `${emailError.message} e ${usernameError.message}`
+
+        case (usernameError && passwordError):
+        return `${usernameError.message} e ${passwordError.message}`
+
+        case (emailError):
+        return emailError.message
+
+        case (passwordError):
+        return passwordError.message  
+
+        case (usernameError):
+        return usernameError.message 
       }
+      
     }
 
     return genericMessage;
@@ -117,7 +136,7 @@ export function useAuth(): UseAuthReturn {
   };
 
   const handleRegister = async () => {
-    if (!email || !password) {
+    if (!email || !password || !username) {
       setError("Preencha todos os campos para continuar.");
       return;
     }
@@ -125,7 +144,7 @@ export function useAuth(): UseAuthReturn {
     try {
       setLoading(true);
       setError(null);
-      await registerUser(email, password);
+      await registerUser(username, email, password, role);
       await signIn(email, password);
     } catch (err: any) {
       const errorMessage: string = errorHandling(err, "Erro ao registrar usuário.")
@@ -135,5 +154,5 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
-  return { email, password, setEmail, setPassword, error, loading, handleLogin, handleRegister, handleGoogleLogin, isGoogleReady: !!request, };
+  return { email, username, password, setEmail, setUsername, setPassword, error, loading, handleLogin, handleRegister, handleGoogleLogin, isGoogleReady: !!request, };
 }

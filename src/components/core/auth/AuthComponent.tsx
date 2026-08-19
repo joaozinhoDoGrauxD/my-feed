@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Center } from "@/gluestack/center";
 import { Text } from "@/gluestack/text";
 import { Box } from "@/gluestack/box";
@@ -12,7 +12,7 @@ import InputWrapperAuth from "@/components/core/auth/InputWrapperAuth";
 import FooterLinkAuth from "@/components/core/auth/FooterLinkAuth";
 import Copyright from "@/components/core/auth/Copyright";
 import { authComponent } from "@/types/authComponent.types";
-import { Mail, Lock } from "lucide-react-native";
+import { Mail, Lock, User } from "lucide-react-native";
 import ThemeButton from "@/components/core/buttons/ThemeButton";
 import SafeAreaWrapper from "../SafeAreaWrapper";
 import { Platform } from "react-native";
@@ -30,8 +30,10 @@ export default function AuthComponent({
   const {
     email,
     password,
+    username,
     setEmail,
     setPassword,
+    setUsername,
     error,
     loading,
     handleLogin,
@@ -41,6 +43,58 @@ export default function AuthComponent({
   } = useAuth();
 
   const handleSubmit = mode === "login" ? handleLogin : handleRegister;
+
+  const LoginInputs = [
+    {
+      icon: Mail,
+      placeholder: "E-mail",
+      value: email,
+      func: setEmail
+    }, {
+
+      icon: Lock,
+      placeholder: "Senha",
+      value: password,
+      func: setPassword
+    }
+  ]
+
+  const RegisterInputs = [
+    {
+      icon: User,
+      placeholder: "Username",
+      value: username,
+      func: setUsername
+    },
+    {
+      icon: Mail,
+      placeholder: "E-mail",
+      value: email,
+      func: setEmail
+    }, {
+      icon: Lock,
+      placeholder: "Senha",
+      value: password,
+      func: setPassword
+    }
+  ]
+
+  function AllInputs(obj: any): ReactNode {
+    return (
+      obj.map((props: any, index: any) => (
+        <InputWrapperAuth
+          icon={props.icon}
+          placeholder={props.placeholder}
+          value={props.value}
+          onChangeText={props.func}
+          key={index}
+          {...(props.placeholder === 'E-mail' && { keyboardType: "email-address" })}
+          {...(props.placeholder === "Senha" && { secureTextEntry: true })}
+          {...(props.placeholder === "Username" && { keyboardType: "default" })}
+        />
+      ))
+    )
+  }
 
   return (
     <SafeAreaWrapper>
@@ -55,21 +109,8 @@ export default function AuthComponent({
           <Center>
             <HeaderAuth subtitle={subHeader} />
             <CardAuth title={titleCard} subtitle={subCard}>
-              <InputWrapperAuth
-                icon={Mail}
-                placeholder="E-mail"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-              />
 
-              <InputWrapperAuth
-                icon={Lock}
-                placeholder="Senha"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
+              {mode === "login" ? AllInputs(LoginInputs) : AllInputs(RegisterInputs)}
 
               {error && (
                 <Box className="bg-destructive/10 rounded-xl p-2.5 border border-destructive/20 mb-3.5">
