@@ -8,25 +8,26 @@ import { HStack } from "@/gluestack/hstack";
 import { VStack } from "@/gluestack/vstack";
 import { Rss, Plus, Trash2, Globe } from "lucide-react-native";
 import SafeAreaWrapper from "@/components/core/SafeAreaWrapper";
+import { api } from "@/services/api";
 
+import { Article } from "@/types/article.types";
 export default function RssPage() {
   const [feedUrl, setFeedUrl] = useState("");
-  const [feeds, setFeeds] = useState([
-    { id: "1", title: "G1 - Tecnologia e Games", url: "g1.globo.com/rss/tecnologia", count: 12 },
-    { id: "2", title: "TechCrunch - Startups", url: "techcrunch.com/feed", count: 8 },
-    { id: "3", title: "Dev.to - Feed Principal", url: "dev.to/feed", count: 15 },
-  ]);
+  const [feeds, setFeeds] = useState<{ id: string, title: string, url: string, count: number }[]>([]);
 
-  const handleAddFeed = () => {
-    if (feedUrl.trim()) {
-      const newFeed = {
-        id: String(Date.now()),
-        title: feedUrl.replace(/https?:\/\/(www\.)?/, "").split("/")[0] || "Novo Feed RSS",
-        url: feedUrl,
-        count: 0
-      };
-      setFeeds([...feeds, newFeed]);
-      setFeedUrl("");
+  const handleAddFeed = async () => {
+    if (feedUrl) {
+      try {
+        const response =  await api.post<Article[]>('/rss/items', { feedUrl, })
+
+        const fetchFeed = response.data
+
+        console.log(fetchFeed)
+
+      } catch (err) {
+          console.error("Error no fetch", err);
+      }
+
     }
   };
 
@@ -37,7 +38,6 @@ export default function RssPage() {
   return (
     <SafeAreaWrapper className="flex-1 bg-background">
       <Box className="flex-1 px-6 pt-4">
-        {/* Header Section */}
         <HStack className="justify-between items-center mb-6">
           <Heading size="xl" className="text-foreground font-bold">
             Feeds RSS

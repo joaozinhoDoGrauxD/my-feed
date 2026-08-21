@@ -11,7 +11,7 @@ export interface UseAuthReturn {
   password: string;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
-  setUsername : (usernname: string) => void;
+  setUsername: (usernname: string) => void;
   error: string | null;
   loading: boolean;
   handleLogin: () => Promise<void>;
@@ -26,7 +26,6 @@ export function useAuth(): UseAuthReturn {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState<string>("")
-  const [role, setRole] = useState<"user" | "admin">("user")
 
   const { signIn, signInWithGoogle: contextSignInWithGoogle } = useSession();
 
@@ -86,49 +85,46 @@ export function useAuth(): UseAuthReturn {
     }
   };
 
-  const errorHandling = (error: any, msg: string): string => {
-    const genericMessage = error.message || msg;
-    const errors = error?.errors || error?.response?.data?.errors;
+  const errorHandling = (myErr: any, msg: string): string | null => {
+    const genericMessage = myErr.message || msg;
+    const errors = myErr?.errors || myErr?.response?.data?.errors;
+
+
 
     if (Array.isArray(errors)) {
       const emailError = errors.find((err: any) => err?.field === "email");
       const passwordError = errors.find((err: any) => err?.field === "password");
-      const usernameError = errors.find((err: any) => err?.field === "username")
-      switch (true) {
-        case (emailError && passwordError && usernameError):
-        return `${emailError.message}, ${passwordError.message} e ${usernameError.message}`;
+      const usernameError = errors.find((err: any) => err?.field === "username");
 
-        case (emailError && passwordError):
-        return `${emailError.message} e ${passwordError.message}`
+      const messages: string[] = [];
+      if (emailError) messages.push(emailError.message);
+      if (passwordError) messages.push(passwordError.message);
+      if (usernameError) messages.push(usernameError.message);
 
-        case (emailError && usernameError):
-        return `${emailError.message} e ${usernameError.message}`
-
-        case (usernameError && passwordError):
-        return `${usernameError.message} e ${passwordError.message}`
-
-        case (emailError):
-        return emailError.message
-
-        case (passwordError):
-        return passwordError.message  
-
-        case (usernameError):
-        return usernameError.message 
+      if (messages.length === 3) {
+        return `${messages[0]}, ${messages[1]} e ${messages[2]}`;
+      } else if (messages.length === 2) {
+        return `${messages[0]} e ${messages[1]}`;
+      } else if (messages.length === 1) {
+        return messages[0];
       }
-      
     }
 
     return genericMessage;
   };
 
   const handleLogin = async () => {
-    setLoading(true);
-    setError(null);
+
+    if (!email || !password) {
+      setError("Preencha todos os campos para continuar.")
+    }
+
     try {
+      setLoading(true);
+      setError(null);
       await signIn(email, password);
     } catch (err: any) {
-      const errorMessage: string = errorHandling(err, 'Erro ao realizar login')
+      const errorMessage: string | null = errorHandling(err, 'Erro ao realizar login')
       setError(errorMessage)
     } finally {
       setLoading(false);
@@ -136,22 +132,22 @@ export function useAuth(): UseAuthReturn {
   };
 
   const handleRegister = async () => {
-    if (!email || !password || !username) {
-      setError("Preencha todos os campos para continuar.");
-      return;
-    }
 
+    if (!username || !email || !password) {
+      setError("Preencha todos os campos para continuar.")
+    }
     try {
       setLoading(true);
       setError(null);
-      await registerUser(username, email, password, role);
+      await registerUser(username, email, password);
       await signIn(email, password);
     } catch (err: any) {
-      const errorMessage: string = errorHandling(err, "Erro ao registrar usuário.")
+      const errorMessage: string | null = errorHandling(err, "Erro ao registrar usuário.")
       setError(errorMessage)
     } finally {
       setLoading(false);
     }
+
   };
 
   return { email, username, password, setEmail, setUsername, setPassword, error, loading, handleLogin, handleRegister, handleGoogleLogin, isGoogleReady: !!request, };

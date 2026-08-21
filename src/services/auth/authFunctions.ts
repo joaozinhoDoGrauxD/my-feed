@@ -3,9 +3,9 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import { removeSessionExpiry, saveSessionExpiry } from "./session";
 
-export async function registerUser(username: string, email: string, password: string, role: "user" | "admin") {
+export async function registerUser(username: string, email: string, password: string) {
 
-  const res = await api.post("/auth/register", { username, email, password, role }, {
+  const res = await api.post("/auth/register", { username, email, password }, {
     validateStatus: () => true
   })
 

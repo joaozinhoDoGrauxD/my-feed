@@ -3,26 +3,39 @@ import { TouchableOpacity } from "react-native";
 import { Box } from "@/gluestack/box";
 import { Heading } from "@/gluestack/heading";
 import { Text } from "@/gluestack/text";
+import { Center } from "@/components/ui/center";
 import { Card } from "@/gluestack/card";
 import { HStack } from "@/gluestack/hstack";
+import { usePlayer } from "@/hooks/usePlayer";
 import { VStack } from "@/gluestack/vstack";
-import { Play, SkipBack, SkipForward, Music, Volume2, Heart } from "lucide-react-native";
+import { Play, SkipBack, SkipForward, Music, Volume2, StepBack, StepForward } from "lucide-react-native";
 import SafeAreaWrapper from "@/components/core/SafeAreaWrapper";
 
 export default function PlayerPage() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
+  const url = ""
+  const {
+    playSound,
+    pauseSound,
+    skipBackward,
+    skipForward,
+    formatTime,
+    isPlaying,
+    position,
+    duration,
+
+  } = usePlayer(url)
 
   return (
     <SafeAreaWrapper className="flex-1 bg-background">
       <Box className="flex-1 px-6 pt-4">
         {/* Header Section */}
-        <HStack className="justify-between items-center mb-8">
-          <Heading size="xl" className="text-foreground font-bold">
-            Player
-          </Heading>
-        </HStack>
-
+        <Center>
+          <HStack className="justify-between items-center mb-8">
+            <Heading size="xl" className="text-foreground font-bold">
+              Player
+            </Heading>
+          </HStack>
+        </Center>
         {/* Player Container */}
         <VStack className="flex-1 justify-center items-center pb-10" space="lg">
           <Card size="default" className="p-6 rounded-3xl bg-card border border-border w-full max-w-[400px] shadow-sm">
@@ -44,9 +57,6 @@ export default function PlayerPage() {
                   Meu Feed Podcast
                 </Text>
               </VStack>
-              <TouchableOpacity onPress={() => setIsLiked(!isLiked)} activeOpacity={0.7}>
-                <Heart size={22} className={isLiked ? "text-destructive fill-destructive" : "text-muted-foreground"} />
-              </TouchableOpacity>
             </HStack>
 
             {/* Progress Bar Mockup */}
@@ -62,12 +72,17 @@ export default function PlayerPage() {
 
             {/* Playback Controls */}
             <HStack className="justify-center items-center mb-4" space="2xl">
+
+              <TouchableOpacity onPress={() => "" } activeOpacity={0.7}>
+                  <StepBack size={28} className="text-foreground"/>
+              </TouchableOpacity>
+
               <TouchableOpacity activeOpacity={0.7}>
                 <SkipBack size={28} className="text-foreground" />
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => setIsPlaying(!isPlaying)}
+                onPress={() => ""}
                 activeOpacity={0.8}
                 className="w-16 h-16 bg-primary rounded-full justify-center items-center shadow-md active:opacity-90"
               >
@@ -77,6 +92,11 @@ export default function PlayerPage() {
               <TouchableOpacity activeOpacity={0.7}>
                 <SkipForward size={28} className="text-foreground" />
               </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => "" } activeOpacity={0.7}>
+                  <StepForward size={28} className="text-foreground"/>
+              </TouchableOpacity>
+
             </HStack>
 
             {/* Volume Control Icon */}
