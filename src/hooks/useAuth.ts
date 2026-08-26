@@ -44,7 +44,7 @@ export function useAuth(): UseAuthReturn {
     console.log("Status da Resposta do Google:", response?.type, response);
 
     if (response?.type === "success") {
-      // No fluxo id_token (Implicit/AuthSession), o token vem em params ou authentication
+     
       const idToken = response.params?.id_token || response.authentication?.idToken;
 
       console.log("ID Token retornado:", idToken ? "Capturado com sucesso" : "NULO");
@@ -78,18 +78,19 @@ export function useAuth(): UseAuthReturn {
   const handleGoogleLogin = () => {
     setError(null);
     if (Platform.OS === "web") {
-      // Abre o pop-up ou redireciona a janela
       promptAsync();
     } else {
       promptAsync();
     }
   };
 
-  const errorHandling = (myErr: any, msg: string): string | null => {
+  const errorHandling = (myErr: any, msg: string): string  => {
     const genericMessage = myErr.message || msg;
     const errors = myErr?.errors || myErr?.response?.data?.errors;
 
-
+    if ((!email || !password) && (!username || !email || !password)) {
+      return "Preencha todos os campos para continuar."
+    }
 
     if (Array.isArray(errors)) {
       const emailError = errors.find((err: any) => err?.field === "email");
@@ -115,16 +116,12 @@ export function useAuth(): UseAuthReturn {
 
   const handleLogin = async () => {
 
-    if (!email || !password) {
-      setError("Preencha todos os campos para continuar.")
-    }
-
     try {
       setLoading(true);
       setError(null);
       await signIn(email, password);
     } catch (err: any) {
-      const errorMessage: string | null = errorHandling(err, 'Erro ao realizar login')
+      const errorMessage: string  = errorHandling(err, 'Erro ao realizar login')
       setError(errorMessage)
     } finally {
       setLoading(false);
@@ -133,21 +130,17 @@ export function useAuth(): UseAuthReturn {
 
   const handleRegister = async () => {
 
-    if (!username || !email || !password) {
-      setError("Preencha todos os campos para continuar.")
-    }
     try {
       setLoading(true);
       setError(null);
       await registerUser(username, email, password);
       await signIn(email, password);
     } catch (err: any) {
-      const errorMessage: string | null = errorHandling(err, "Erro ao registrar usuário.")
+      const errorMessage: string = errorHandling(err, "Erro ao registrar usuário.")
       setError(errorMessage)
     } finally {
       setLoading(false);
     }
-
   };
 
   return { email, username, password, setEmail, setUsername, setPassword, error, loading, handleLogin, handleRegister, handleGoogleLogin, isGoogleReady: !!request, };
