@@ -18,7 +18,7 @@ export default function SafeAreaWrapper({ children, className = "flex-1 bg-backg
 
   return (
     <SafeAreaView className={className} style={{ flex: 1 }}>
-      <Box className="flex-1">
+      <Box className="flex-1 bg-background">
         {children}
       </Box>
     </SafeAreaView>

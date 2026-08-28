@@ -7,11 +7,12 @@ import { Spinner } from "@/components/ui/spinner";
 import { useSession } from "@/services/auth/session";
 import AboutPage from "@/screens/AboutPage"
 import IndexPage from "@/screens/IndexPage"
+import SettingsPage from "@/screens/SettingsPage";
 import LoginPage from "@/screens/LoginPage";
 import PlayerPage from "@/screens/PlayerPage";
 import RssPage from "@/screens/RssPage";
 import RegisterPage from "@/screens/RegisterPage";
-import { Home, Info, Rss, PlayCircle} from "lucide-react-native";
+import { Home, Info, Rss, PlayCircle, Settings} from "lucide-react-native";
 import useTheme from "@/hooks/useTheme";
 
 export default function Tabs() {
@@ -43,6 +44,8 @@ export default function Tabs() {
                     return <Rss size={size} color={color}/>
                 } else if (route.name === 'Player') {
                     return <PlayCircle size={size} color={color}/>
+                } else if (route.name === 'Settings') {
+                    return <Settings size={size} color={color}/> 
                 }
                 return null
             },
@@ -60,6 +63,7 @@ export default function Tabs() {
             <Tab.Screen name="Rss" component={RssPage} options={{headerShown: false }}/>
             <Tab.Screen name="Player" component={PlayerPage} options={{headerShown: false }}/>
             <Tab.Screen name="About" component={AboutPage} options={{headerShown: false }}/>
+            <Tab.Screen name="Settings" component={SettingsPage} options={{headerShown: false}}/>
         </Tab.Navigator>
     ) : (
         <Stack.Navigator>

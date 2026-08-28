@@ -18,7 +18,6 @@ export default function MobileIndex() {
           </Heading>
           <HStack space="md" className="items-center">
             <Box>
-            <ThemeButton />
             </Box>
             <SignOutButton />
           </HStack>
