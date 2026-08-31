@@ -3,8 +3,6 @@ import { Heading } from "@/gluestack/heading";
 import { Text } from "@/gluestack/text";
 import { Card } from "@/gluestack/card";
 import { HStack } from "@/gluestack/hstack";
-import ThemeButton from "../core/buttons/ThemeButton";
-import SignOutButton from "../core/buttons/SignOutButton";
 import SafeAreaWrapper from "../core/SafeAreaWrapper";
 
 export default function MobileIndex() {
@@ -19,7 +17,6 @@ export default function MobileIndex() {
           <HStack space="md" className="items-center">
             <Box>
             </Box>
-            <SignOutButton />
           </HStack>
         </HStack>
 

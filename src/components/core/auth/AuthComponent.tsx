@@ -16,6 +16,7 @@ import { Mail, Lock, User } from "lucide-react-native";
 import ThemeButton from "@/components/core/buttons/ThemeButton";
 import SafeAreaWrapper from "../SafeAreaWrapper";
 import { Platform } from "react-native";
+import { useSession } from "@/services/auth/session";
 
 export default function AuthComponent({
   mode,
@@ -42,6 +43,7 @@ export default function AuthComponent({
     isGoogleReady
   } = useAuth();
 
+  const {session} = useSession()
   const handleSubmit = mode === "login" ? handleLogin : handleRegister;
 
   const LoginInputs = [
@@ -104,7 +106,7 @@ export default function AuthComponent({
             <ThemeButton />
           </Box>
         )}
-        <Box className="mb-30">
+        <Box className={session ? "mb-20" : "mb-20 gap-5"}>
           {Platform.OS !== 'web' && <ThemeButton />}
           <Center>
             <HeaderAuth subtitle={subHeader} />
