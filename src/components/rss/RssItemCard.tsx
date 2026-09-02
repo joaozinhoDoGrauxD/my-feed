@@ -6,10 +6,15 @@ import { Heading } from "@/gluestack/heading";
 import { Text } from "@/gluestack/text";
 import { VStack } from "@/gluestack/vstack";
 import { HStack } from "@/gluestack/hstack";
-import { ChevronDown, ChevronUp } from "lucide-react-native";
+import { ChevronDown, ChevronUp, Trash2 } from "lucide-react-native";
 import ExternalLinkButton from "@/components/core/buttons/ExternalLinkButton";
+import BookmarkButton from "@/components/core/buttons/BookmarkButton";
+import BookmarkDrawer from "@/components/bookmarks/BookmarkDrawer";
+import { api } from "@/services/api";
 
 export interface ArticleItem {
+  _id?: string;
+  id?: string;
   url: string;
   title: string;
   description?: string;
@@ -32,10 +37,13 @@ export interface ArticleItem {
 
 interface RssItemCardProps {
   item: ArticleItem;
+  onDelete?: () => void;
 }
 
-export default function RssItemCard({ item }: RssItemCardProps) {
+export default function RssItemCard({ item, onDelete }: RssItemCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSavedJustNow, setIsSavedJustNow] = useState(false);
 
   // Extrai autor (lidando com string ou array)
   const authorName = Array.isArray(item.author?.username)
@@ -67,22 +75,50 @@ export default function RssItemCard({ item }: RssItemCardProps) {
     }
   };
 
+  const handleSaveToFolder = async (folderId: string) => {
+    try {
+      setIsDrawerOpen(false);
+      await api.patch(`/bookmarks/${folderId}/items`, { data: item });
+      setIsSavedJustNow(true);
+    } catch (err) {
+      console.error("Erro ao salvar post:", err);
+    }
+  };
+
   return (
     <Card className="p-5 rounded-3xl bg-card border border-border mb-4 shadow-sm">
       <VStack space="md">
+        <HStack className="justify-between items-center w-full">
+          {authorName ? (
+            <TouchableOpacity
+              activeOpacity={authorLink ? 0.7 : 1}
+              onPress={handleAuthorClick}
+              disabled={!authorLink}
+              className="flex-1 mr-2"
+            >
+              <Text className="text-foreground font-bold text-base" numberOfLines={1}>
+                {authorName}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <Box className="flex-1" />
+          )}
 
-        {authorName && (
-          <TouchableOpacity
-            activeOpacity={authorLink ? 0.7 : 1}
-            onPress={handleAuthorClick}
-            disabled={!authorLink}
-            className="self-start"
-          >
-            <Text className="text-foreground font-bold text-base">
-              {authorName}
-            </Text>
-          </TouchableOpacity>
-        )}
+          {onDelete ? (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={onDelete}
+              className="p-1 border border-destructive/40 rounded-lg bg-destructive/10"
+            >
+              <Trash2 size={16} className="text-destructive" />
+            </TouchableOpacity>
+          ) : (
+            <BookmarkButton
+              onPress={() => setIsDrawerOpen(true)}
+              isSavedJustNow={isSavedJustNow}
+            />
+          )}
+        </HStack>
 
         {imageUrl && (
           <Box className="w-full bg-secondary rounded-2xl overflow-hidden border border-border">
@@ -94,7 +130,6 @@ export default function RssItemCard({ item }: RssItemCardProps) {
           </Box>
         )}
 
-        {/* Mídia Áudio */}
         {audioUrl && !imageUrl && (
           <Box className="w-full p-4 bg-secondary rounded-2xl border border-border items-center justify-center">
             <Text size="xs" className="text-muted-foreground font-medium">
@@ -103,7 +138,6 @@ export default function RssItemCard({ item }: RssItemCardProps) {
           </Box>
         )}
 
-        {/* Título com Seta Indicadora para Descrição */}
         <TouchableOpacity
           activeOpacity={hasDescription ? 0.7 : 1}
           onPress={toggleExpand}
@@ -141,6 +175,14 @@ export default function RssItemCard({ item }: RssItemCardProps) {
           <ExternalLinkButton url={item.url} source={item.source} />
         </HStack>
       </VStack>
+
+      {!onDelete && (
+        <BookmarkDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          onSelectFolder={handleSaveToFolder}
+        />
+      )}
     </Card>
   );
 }

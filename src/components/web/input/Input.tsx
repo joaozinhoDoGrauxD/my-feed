@@ -22,6 +22,7 @@ const MyInput = (): ReactNode => {
       <Box className="bg-transparent p-5">
         <Center>
           <HStack space="md" className="items-center justify-center">
+            <NavigateButton route="Bookmarks" title="Bookmarks" />
             <NavigateButton route="Lists" title="Listas" />
             <NavigateButton route="About" title="Sobre" />
           </HStack>
