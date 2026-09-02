@@ -1,5 +1,6 @@
 import { ReactNode, useState } from "react";
 import { Box } from "@/gluestack/box";
+import { HStack } from "@/gluestack/hstack";
 import { Button, ButtonSpinner, ButtonText } from "@/gluestack/button";
 import { Search } from "lucide-react-native";
 import { Input, InputField, InputSlot, InputIcon } from "@/gluestack/input";
@@ -18,13 +19,15 @@ const MyInput = (): ReactNode => {
 
   return (
     <>
-    <Box className="bg-transparent p-5">
-      <Center>
-        <Box className="bg-secondary m-auto">
-          <NavigateButton route="About" title="Sobre" />
-        </Box>
-      </Center>
-    </Box>
+      <Box className="bg-transparent p-5">
+        <Center>
+          <HStack space="md" className="items-center justify-center">
+            <NavigateButton route="Lists" title="Listas" />
+            <NavigateButton route="About" title="Sobre" />
+          </HStack>
+        </Center>
+      </Box>
+
       <Box className="pt-6">
         <Box className="px-6 mb-2 flex-row gap-3 items-center">
           <Box className="flex-1">
