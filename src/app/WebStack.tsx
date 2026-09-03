@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import IndexPage from "@/screens/IndexPage";
 import ListsPage from "@/screens/ListsPage";
 import ListContentPage from "@/screens/ListContentPage";
+import BookmarksPage from "@/screens/BookmarksPage";
+import BookmarkFolderContentPage from "@/screens/BookmarkFolderContentPage";
 import AboutPage from "@/screens/AboutPage";
 import LoginPage from "@/screens/LoginPage";
 import RegisterPage from "@/screens/RegisterPage";
@@ -17,6 +19,8 @@ export default function WebStack() {
       {session ? (
         <>
           <Stack.Screen options={{ headerShown: false }} name="Home" component={IndexPage} />
+          <Stack.Screen options={{ headerShown: false }} name="Bookmarks" component={BookmarksPage} />
+          <Stack.Screen options={{ headerShown: false }} name="BookmarkFolderContent" component={BookmarkFolderContentPage} />
           <Stack.Screen options={{ headerShown: false }} name="Lists" component={ListsPage} />
           <Stack.Screen options={{ headerShown: false }} name="ListContent" component={ListContentPage} />
           <Stack.Screen options={{ headerShown: false }} name="About" component={AboutPage} />
