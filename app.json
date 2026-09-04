@@ -41,7 +41,10 @@
       "expo-font",
       "expo-asset",
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-image",
+      "expo-status-bar",
+      "expo-router"
     ],
     "experiments": {
       "typedRoutes": true,
