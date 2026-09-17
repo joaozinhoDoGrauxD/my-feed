@@ -7,6 +7,7 @@ import ResultCardMedia from "./medias/ResultCardMedia";
 import ResultCardContent from "./ResultCardContent";
 import ResultCardAudio from "./medias/ResultCardAudio";
 import { ResultCardProps } from "@/types/result.types";
+import useTheme from "@/hooks/useTheme";
 
 const ResultCard: React.FC<ResultCardProps> = ({
   item,
@@ -17,6 +18,7 @@ const ResultCard: React.FC<ResultCardProps> = ({
 }) => {
   const [lastExpanded, setLastExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { isDark } = useTheme();
 
   if (isExpanded !== lastExpanded) {
     setLastExpanded(isExpanded);
@@ -48,7 +50,13 @@ const ResultCard: React.FC<ResultCardProps> = ({
   }, [isExpanded, isLoading]);
 
   return (
-    <Card className="mb-5 overflow-hidden p-0 gap-0 border-outline-200">
+    <Card
+      className={`mb-6 overflow-hidden p-0 gap-0 rounded-3xl backdrop-blur-2xl transition-all duration-500 ease-in-out ${
+        isDark
+          ? "border border-white/15 bg-slate-900/60 hover:bg-slate-900/80 shadow-[0_15px_35px_rgba(0,0,0,0.4)]"
+          : "border border-slate-200/80 bg-white/90 hover:bg-white shadow-[0_10px_30px_rgba(0,0,0,0.05)]"
+      }`}
+    >
       <ResultCardHeader
         title={item.title}
         author={item.authors?.[0]?.name}
@@ -57,7 +65,13 @@ const ResultCard: React.FC<ResultCardProps> = ({
       />
 
       {isExpanded && (
-        <Box className="p-5 border-t border-outline-200 bg-background-50">
+        <Box
+          className={`p-6 border-t backdrop-blur-xl transition-all duration-300 ${
+            isDark
+              ? "border-white/10 bg-black/20"
+              : "border-slate-100 bg-slate-50/60"
+          }`}
+        >
           {isLoading ? (
             <ResultCardLoader />
           ) : (

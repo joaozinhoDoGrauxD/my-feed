@@ -1,4 +1,5 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
+import { Dimensions, Platform } from "react-native";
 import { Center } from "@/gluestack/center";
 import { Text } from "@/gluestack/text";
 import { Box } from "@/gluestack/box";
@@ -15,8 +16,89 @@ import { authComponent } from "@/types/authComponent.types";
 import { Mail, Lock, User } from "lucide-react-native";
 import ThemeButton from "@/components/core/buttons/ThemeButton";
 import SafeAreaWrapper from "../SafeAreaWrapper";
-import { Platform } from "react-native";
 import { useSession } from "@/services/auth/session";
+import useTheme from "@/hooks/useTheme";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+  Easing,
+} from "react-native-reanimated";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+// Esferas luminosas que se movem de forma contínua e sem ordem fixa no fundo
+function FloatingOrb({
+  color,
+  size,
+  initialX,
+  initialY,
+}: {
+  color: string;
+  size: number;
+  initialX: number;
+  initialY: number;
+}) {
+  const translateX = useSharedValue(initialX);
+  const translateY = useSharedValue(initialY);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    // Animação dinâmica para o eixo X
+    translateX.value = withRepeat(
+      withTiming(Math.random() * (SCREEN_WIDTH - size * 0.5), {
+        duration: 9000 + Math.random() * 5000,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      -1,
+      true
+    );
+
+    // Animação dinâmica para o eixo Y
+    translateY.value = withRepeat(
+      withTiming(Math.random() * (SCREEN_HEIGHT - size * 0.5), {
+        duration: 10000 + Math.random() * 5000,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      -1,
+      true
+    );
+
+    // Efeito de respiração/pulsação de tamanho
+    scale.value = withRepeat(
+      withTiming(1.25, {
+        duration: 7000 + Math.random() * 3000,
+        easing: Easing.inOut(Easing.ease),
+      }),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+      { scale: scale.value },
+    ],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        {
+          position: "absolute",
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: color,
+        },
+        animatedStyle,
+      ]}
+    />
+  );
+}
 
 export default function AuthComponent({
   mode,
@@ -28,6 +110,7 @@ export default function AuthComponent({
   linkText,
   href
 }: authComponent) {
+  const { isDark } = useTheme();
   const {
     email,
     password,
@@ -40,10 +123,9 @@ export default function AuthComponent({
     handleLogin,
     handleRegister,
     handleGoogleLogin,
-    isGoogleReady
   } = useAuth();
 
-  const {session} = useSession()
+  const { session } = useSession();
   const handleSubmit = mode === "login" ? handleLogin : handleRegister;
 
   const LoginInputs = [
@@ -52,14 +134,14 @@ export default function AuthComponent({
       placeholder: "E-mail",
       value: email,
       func: setEmail
-    }, {
-
+    },
+    {
       icon: Lock,
       placeholder: "Senha",
       value: password,
       func: setPassword
     }
-  ]
+  ];
 
   const RegisterInputs = [
     {
@@ -73,13 +155,14 @@ export default function AuthComponent({
       placeholder: "E-mail",
       value: email,
       func: setEmail
-    }, {
+    },
+    {
       icon: Lock,
       placeholder: "Senha",
       value: password,
       func: setPassword
     }
-  ]
+  ];
 
   function AllInputs(obj: any): ReactNode {
     return (
@@ -95,66 +178,87 @@ export default function AuthComponent({
           {...(props.placeholder === "Username" && { keyboardType: "default" })}
         />
       ))
-    )
+    );
   }
 
   return (
     <SafeAreaWrapper>
-      <Box className="flex-1 bg-background justify-center items-center px-5 py-5">
-        {Platform.OS === 'web' && (
-          <Box className="mb-40 ml-190">
-            <ThemeButton />
-          </Box>
-        )}
-        <Box className={session ? "mb-20" : "mb-20 gap-5"}>
-          {Platform.OS !== 'web' && <ThemeButton />}
-          <Center>
-            <HeaderAuth subtitle={subHeader} />
-            <CardAuth title={titleCard} subtitle={subCard}>
+      <Box className="relative flex-1 bg-background justify-center items-center px-5 py-8 overflow-hidden">
+        
+        {/* Camada de Orbes Flutuantes em Segundo Plano */}
+        <Box className="absolute inset-0 pointer-events-none blur-[100px] opacity-60">
+          <FloatingOrb
+            color={isDark ? "rgba(99, 102, 241, 0.45)" : "rgba(99, 102, 241, 0.3)"}
+            size={380}
+            initialX={-60}
+            initialY={-60}
+          />
+          <FloatingOrb
+            color={isDark ? "rgba(14, 165, 233, 0.4)" : "rgba(56, 189, 248, 0.25)"}
+            size={400}
+            initialX={SCREEN_WIDTH - 150}
+            initialY={SCREEN_HEIGHT - 250}
+          />
+          <FloatingOrb
+            color={isDark ? "rgba(168, 85, 247, 0.35)" : "rgba(192, 132, 252, 0.2)"}
+            size={320}
+            initialX={100}
+            initialY={SCREEN_HEIGHT / 3}
+          />
+        </Box>
 
-              {mode === "login" ? AllInputs(LoginInputs) : AllInputs(RegisterInputs)}
+        {/* Botão de Tema Posicionado */}
+        <Box className="absolute top-6 right-6 z-20">
+          <ThemeButton />
+        </Box>
 
-              {error && (
-                <Box className="bg-destructive/10 rounded-xl p-2.5 border border-destructive/20 mb-3.5">
-                  <Text className="text-destructive text-xs text-center font-semibold">{error}</Text>
+        {/* Conteúdo Principal de Login/Registro */}
+        <Box className="z-10 w-full max-w-[420px] items-center my-auto">
+          <HeaderAuth subtitle={subHeader} />
+
+          <CardAuth title={titleCard} subtitle={subCard}>
+            {mode === "login" ? AllInputs(LoginInputs) : AllInputs(RegisterInputs)}
+
+            {error && (
+              <Box className="bg-destructive/10 rounded-xl p-2.5 border border-destructive/20 mb-3.5">
+                <Text className="text-destructive text-xs text-center font-semibold">{error}</Text>
+              </Box>
+            )}
+
+            <Button
+              onPress={handleSubmit}
+              disabled={loading}
+              className="w-full bg-primary rounded-2xl h-12 flex-row justify-center items-center shadow-md mt-2 active:opacity-80 transition-all"
+            >
+              {loading ? (
+                <Spinner color="#FFFFFF" size="small" />
+              ) : (
+                <Box className="flex-row items-center justify-center gap-2">
+                  <Icon as={icon} size="sm" className="text-primary-foreground" />
+                  <ButtonText className="text-primary-foreground font-semibold text-sm">
+                    {mode === "login" ? "Entrar" : "Criar Conta"}
+                  </ButtonText>
                 </Box>
               )}
+            </Button>
 
-              <Button
-                onPress={handleSubmit}
-                disabled={loading}
-                className="w-full bg-primary rounded-2xl h-12 flex-row justify-center items-center shadow-sm mt-2 active:bg-primary/90"
-              >
-                {loading ? (
-                  <Spinner color="#FFFFFF" size="small" />
-                ) : (
-                  <Box className="flex-row items-center justify-center gap-2">
-                    <Icon as={icon} size="sm" className="text-primary-foreground" />
-                    <ButtonText className="text-primary-foreground font-semibold text-sm">
-                      {mode === "login" ? "Entrar" : "Criar Conta"}
-                    </ButtonText>
-                  </Box>
-                )}
-              </Button>
+            <Button
+              onPress={handleGoogleLogin}
+              disabled={loading}
+              className="w-full bg-secondary border border-border rounded-2xl h-12 flex-row justify-center items-center shadow-sm mt-3 active:opacity-80 transition-all"
+            >
+              <ButtonText className="text-secondary-foreground font-semibold text-sm">
+                Continuar com o Google
+              </ButtonText>
+            </Button>
 
-              <Button
-                onPress={handleGoogleLogin}
-                disabled={loading}
-                className="w-full bg-secondary border border-border rounded-2xl h-12 flex-row justify-center items-center shadow-sm mt-3 active:bg-secondary/80"
-              >
-                <ButtonText className="text-secondary-foreground font-semibold text-sm">
-                  Continuar com o Google
-                </ButtonText>
-              </Button>
-
-              <FooterLinkAuth
-                promptText={promptText}
-                linkText={linkText}
-                href={href}
-              />
-              <Copyright />
-            </CardAuth>
-          </Center>
+            <FooterLinkAuth
+              promptText={promptText}
+              linkText={linkText}
+              href={href}
+            />
+            <Copyright />
+          </CardAuth>
         </Box>
       </Box>
     </SafeAreaWrapper>
