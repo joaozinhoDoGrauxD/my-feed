@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { useWindowDimensions } from "react-native";
 import { ResultProps } from "@/types/result.types";
-import {FlashList} from '@shopify/flash-list'
+import { FlashList } from "@shopify/flash-list";
 import ResultCard from "./card/ResultCard";
 
 const Result: React.FC<ResultProps> = ({ data, checkedTypes }) => {
   const [expanded, setExpanded] = useState<number | null>(null);
   const { width } = useWindowDimensions();
-  
+
   return (
     <FlashList
-      contentContainerStyle={{paddingTop: 24, paddingHorizontal: 24, paddingBottom: 40}}
+      contentContainerStyle={{
+        paddingTop: 16,
+        paddingHorizontal: 0,
+        paddingBottom: 48,
+      }}
       data={data}
-      keyExtractor={(item,index) => item.id ? item.id.toString() : index.toString()}
+      keyExtractor={(item, index) =>
+        item.id ? item.id.toString() : index.toString()
+      }
       showsVerticalScrollIndicator={false}
-      renderItem={({item, index}) => (
-      <ResultCard
+      renderItem={({ item, index }) => (
+        <ResultCard
           item={item}
           isExpanded={expanded === index}
           onPress={() => setExpanded(expanded === index ? null : index)}
@@ -23,10 +29,8 @@ const Result: React.FC<ResultProps> = ({ data, checkedTypes }) => {
           checkedTypes={checkedTypes}
         />
       )}
-    >
-
-    </FlashList>
-  )
+    />
+  );
 };
 
 export default Result;

@@ -1,6 +1,6 @@
-import { Stack, useRouter, useSegments } from 'expo-router'
-import { useEffect } from 'react'
-import { useSession } from '@/services/auth/session'
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { useEffect } from 'react';
+import { useSession } from '@/services/auth/session';
 import Theme from "@/components/core/Theme";
 import { SessionProvider } from "@/services/auth/sessionProvider";
 
@@ -26,10 +26,10 @@ function AppLayout() {
     }
 
     return (
-        <Stack>
-            <Stack.Screen name='(app)' options={{ headerShown: false }} />
-            <Stack.Screen name='sign-in' options={{ headerShown: false }} />
-            <Stack.Screen name='sign-up' options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name='(app)' />
+            <Stack.Screen name='sign-in' />
+            <Stack.Screen name='sign-up' />
         </Stack>
     );
 }
@@ -41,5 +41,5 @@ export default function RootLayout() {
                 <AppLayout />
             </SessionProvider>
         </Theme>
-    )
+    );
 }
